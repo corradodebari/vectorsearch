@@ -31,12 +31,29 @@ Making a similarity seach on the output of this algorithm, that is **Vector** ty
 The index that you can create on the vectors makes it possible now, since a full scan distance calculation among a vector and all the vectors in the table wasn't impracticable in the past for performance reasons.
 
 ## Task 1.
-First of all we need to upload the dataset used in the guide in an Oracle DB 23ai instance. You can use an Oracle 23ai free container in docker in this way:
+- First of all we need to upload the dataset used in the guide in an Oracle DB 23ai instance. You can use an Oracle 23ai free container in docker in this way:
+```bash
+podman run -d --name db23ai -p 1521:1521 container-registry.oracle.com/database/free:latest
+podman exec db23ai ./setPassword.sh Welcome1234##
+```
+- Then create an user to store tables, algorithms and vectors:
+```bash
+podman exec -it db23ai sqlplus '/ as sysdba'
+```
+- run in sqlplus:
+```bash
+alter system set vector_memory_size=512M scope=spfile;
+alter session set container=FREEPDB1;
 
-podman run -d --name selectai -p 1521:1521 container-registry.oracle.com/database/free:latest
-podman exec selectai ./setPassword.sh Welcome1234##
-
-
+CREATE USER "VECTOR" IDENTIFIED BY vector
+    DEFAULT TABLESPACE "USERS"
+    TEMPORARY TABLESPACE "TEMP";
+GRANT "DB_DEVELOPER_ROLE" TO "VECTOR";
+ALTER USER "VECTOR" DEFAULT ROLE ALL;
+ALTER USER "VECTOR" QUOTA UNLIMITED ON USERS;
+EXIT;
+```bash
+- Restart the container and the db it's ready.
 
 
   
