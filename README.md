@@ -57,11 +57,11 @@ EXIT;
 - Restart the container and the db it's ready.
 
 ## Upload dataset
-## Instructions
+
 - Download from [here](https://archive.ics.uci.edu/dataset/222/bank+marketing) the dataset zip file. 
-- Unzip the file and look for `bank-additional-full.csv` in the directory `bank+marketing/bank-additional` 
+- Unzip the file and look for `bank-additional-full.csv` in the directory `bank+marketing/bank-additional`. 
 - Copy that file in the Jupyter Notebook directory.
-- Create a `venv` on which run the notebook
+- Create a `venv` on which run the notebook:
 ```bash
 cd src/
 python3.11 -m venv .venv --copies
@@ -69,5 +69,87 @@ source .venv/bin/activate
 pip3.11 install --upgrade pip wheel setuptools
 ```
   
+## Create the model for PCA and generate vectors
 
+- Prepare the table to store the settings related to the PCA model we are going to create:
+```bash
+CREATE TABLE mod_sett(
+    setting_name VARCHAR2(30),
+    setting_value VARCHAR2(30)
+);
+/
+```
+
+- Insert main settings related to the model:
+```bash
+BEGIN
+    INSERT INTO mod_sett (setting_name, setting_value) VALUES
+                ( dbms_data_mining.algo_name,
+                  dbms_data_mining.algo_singular_value_decomp);
+    INSERT INTO mod_sett (setting_name, setting_value) VALUES
+                (dbms_data_mining.prep_auto, dbms_data_mining.prep_auto_on);
+    INSERT INTO mod_sett (setting_name, setting_value) VALUES
+                (dbms_data_mining.svds_scoring_mode,
+                dbms_data_mining.svds_scoring_pca);
+    INSERT INTO mod_sett (setting_name, setting_value) VALUES
+                (dbms_data_mining.feat_num_features, 5);
+    commit;
+END;
+/
+```
+where: 
+  - algo_singular_value_decomp: it's the ml algorithm (Singular Value Decomposition (SVD)) we are going to use.
+  - prep_auto_on: each fields will be automatically transformed in numbers to be ingested by the PCA. This important features included in OML let you save time in data preparation.
+  - svds_scoring_pca: we are using the Singular Value Decomposition (SVD) algorithm for Principal Component Analysis (PCA).
+  - 5: are the size of vector you want to reduce the initial 20 fields included in the dataset table.
+
+- create the model:
+```bash
+BEGIN
+    DBMS_DATA_MINING.CREATE_MODEL(
+        model_name => 'pcamod',
+        mining_function => dbms_data_mining.feature_extraction,
+        data_table_name => 'bank',
+        case_id_column_name => 'id',
+        settings_table_name => 'mod_sett');
+END;
+/
+```
+It's quite intuitive the meaning of each parameters. `pcamod` it will be the reference to the model created we have to use for vectorization.
+
+
+## Use the model for similarity search
+- In this way:
+```bash
+CREATE TABLE pca_output AS
+    (   SELECT id, vector_embedding(pcamod USING *) embedding
+        FROM bank);
+/
+```
+You create a new table with data coming from that storing the dataset loaded, adding a new field with the embedding vector created on each record with the PCA algorithms.
+- To make feasible to exploit the embedding vectors, we create and IVF permanent index, with an accuracy of 95% to speedup the search:
+```bash
+  CREATE VECTOR INDEX my_ivf_idx ON pca_output(embedding)
+ORGANIZATION NEIGHBOR PARTITIONS
+DISTANCE COSINE WITH TARGET ACCURACY 95;
+/
+```
+
+## Optional cleaning
+If you want run more than one time the labs, remove the artifact created:
+  
+```bash
+drop table pca_output CASCADE CONSTRAINTS;
+/
+
+drop table mod_sett CASCADE CONSTRAINTS;
+/
+
+BEGIN
+    DBMS_DATA_MINING.DROP_MODEL(
+        model_name => 'pcamod'
+    );
+END;
+/
+```
 
