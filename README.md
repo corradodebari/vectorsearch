@@ -30,6 +30,13 @@ technique in machine learning, is used in this tutorial.
 Making a similarity seach on the output of this algorithm, that is **Vector** type compatible from 23.7 with the VECTOR_EMBEDDING() operator, it's possible to retrieve the most similar records giving in input a same kind of record.
 The index that you can create on the vectors makes it possible now, since a full scan distance calculation among a vector and all the vectors in the table wasn't impracticable in the past for performance reasons.
 
+## Task 1.
+First of all we need to upload the dataset used in the guide in an Oracle DB 23ai instance. You can use an Oracle 23ai free container in docker in this way:
+
+podman run -d --name selectai -p 1521:1521 container-registry.oracle.com/database/free:latest
+podman exec selectai ./setPassword.sh Welcome1234##
+
+
 
 
   
