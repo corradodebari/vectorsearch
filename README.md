@@ -1,4 +1,4 @@
-# DB23ai Vector Search
+# Unlock Similarity Search on Relational Data, with the Oracle DB23ai.
 <p align="center">
   <img src="./cover.png" alt="Description" width="500"/>
 </p>
@@ -10,9 +10,9 @@ You find in this repo two main files:
 - `bank_upload.ipynb` : a Jupyter Notebook to upload the dataset used in th AI Vector Search User Guide in a 23ai DB instance, using Python and OracleDB driver.
 - `create_model.sql` : to use a Principal Component Analysis (PCA) algorithm to create a embedding vectors and make similarity search, in PL/SQL.
 
-These source code allow you test the content of the related blog post.
+These source code allow you test the content of the related blog post:
+**Unlock Similarity Search on Relational Data, with the Oracle DB23ai.**
 
-## Unlock Similarity Search on Relational Data, with the Oracle DB23ai.
 That's a lot of talk about unstructured data, chunking and embedding on which apply similarity search for RAG too, but how to use this new features on traditional tabular data?
 Let's suppose we need to search for medical records similar to a patient to apply the same treatment, or giving a financial status of a customer we want to see if a loan has been granted to others in similar condition in the past?
 Let's discover how to simplify these types of search exploiting the Oracle Machine Learning algorithms like
