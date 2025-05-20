@@ -11,7 +11,7 @@ You find in this repo two main files:
 - `create_model.sql` : to use a Principal Component Analysis (PCA) algorithm to create a embedding vectors and make similarity search, in PL/SQL.
 
 These source code allow you test the content of the related blog post:
-**Unlock Similarity Search on Relational Data, with the Oracle DB23ai.**
+**Unlock Similarity Search on Tabular Data, with the Oracle DB23ai.**
 
 That's a lot of talk about unstructured data, chunking and embedding on which apply similarity search for RAG too, but how to use this new features on traditional tabular data?
 Let's suppose we need to search for medical records similar to a patient to apply the same treatment, or giving a financial status of a customer we want to see if a loan has been granted to others in similar condition in the past?
