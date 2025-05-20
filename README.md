@@ -30,7 +30,7 @@ technique in machine learning, is used in this tutorial.
 Making a similarity seach on the output of this algorithm, that is **Vector** type compatible from 23.7 with the VECTOR_EMBEDDING() operator, it's possible to retrieve the most similar records giving in input a same kind of record.
 The index that you can create on the vectors makes it possible now, since a full scan distance calculation among a vector and all the vectors in the table wasn't impracticable in the past for performance reasons.
 
-## Task 1.
+## Install DB23ai
 - First of all we need to upload the dataset used in the guide in an Oracle DB 23ai instance. You can use an Oracle 23ai free container in docker in this way:
 ```bash
 podman run -d --name db23ai -p 1521:1521 container-registry.oracle.com/database/free:latest
@@ -52,10 +52,22 @@ GRANT "DB_DEVELOPER_ROLE" TO "VECTOR";
 ALTER USER "VECTOR" DEFAULT ROLE ALL;
 ALTER USER "VECTOR" QUOTA UNLIMITED ON USERS;
 EXIT;
-```bash
+```
+
 - Restart the container and the db it's ready.
 
-
+## Upload dataset
+## Instructions
+- Download from [here](https://archive.ics.uci.edu/dataset/222/bank+marketing) the dataset zip file. 
+- Unzip the file and look for `bank-additional-full.csv` in the directory `bank+marketing/bank-additional` 
+- Copy that file in the Jupyter Notebook directory.
+- Create a `venv` on which run the notebook
+```bash
+cd src/
+python3.11 -m venv .venv --copies
+source .venv/bin/activate
+pip3.11 install --upgrade pip wheel setuptools
+```
   
 
 
