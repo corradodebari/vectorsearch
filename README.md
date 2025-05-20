@@ -4,7 +4,7 @@
 </p>
 
 This lab is made on the paragraph "*Vectorize Relational Tables Using OML Feature Extraction Algorithms*" from the **Oracle® Database
-Oracle AI Vector Search User's Guide** you can access [here].(https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/vectorize-relational-tables-using-oml-feature-extraction-algorithms.html)
+Oracle AI Vector Search User's Guide** you can access [here](https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/vectorize-relational-tables-using-oml-feature-extraction-algorithms.html).
 
 You find in this repo two main files:
 - `bank_upload.ipynb` : a Jupyter Notebook to upload the dataset used in th AI Vector Search User Guide in a 23ai DB instance, using Python and OracleDB driver.
