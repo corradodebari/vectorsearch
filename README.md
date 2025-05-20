@@ -1,4 +1,4 @@
-# Unlock Similarity Search on Relational Data, with the Oracle DB23ai.
+# Unlock Similarity Search on Tabular Data, with the Oracle DB23ai.
 <p align="center">
   <img src="./cover.png" alt="Description" width="500"/>
 </p>
