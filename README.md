@@ -129,11 +129,36 @@ CREATE TABLE pca_output AS
 You create a new table with data coming from that storing the dataset loaded, adding a new field with the embedding vector created on each record with the PCA algorithms.
 - To make feasible to exploit the embedding vectors, we create and IVF permanent index, with an accuracy of 95% to speedup the search:
 ```bash
-  CREATE VECTOR INDEX my_ivf_idx ON pca_output(embedding)
+CREATE VECTOR INDEX my_ivf_idx ON pca_output(embedding)
 ORGANIZATION NEIGHBOR PARTITIONS
 DISTANCE COSINE WITH TARGET ACCURACY 95;
 /
 ```
+- Let's test. First we show the content of a record with ID=1000:
+
+```  
+ID    PDAYS  EURIBOR3M CONTACT    emp.var.rate DAY_OF_WEEK                                       
+---------------------------------------------------------- 
+1000  999    4.856     telephone  1.1          wed                                               
+```
+- Now we look for the three nearest (similar) records in the table:
+``` 
+SELECT p.id id, b.PDAYS PDAYS, b.EURIBOR3M EURIBOR3M, b.CONTACT CONTACT, b."emp.var.rate" "EMP.VAR.RATE", b.DAY_OF_WEEK DAY_OF_WEEK
+FROM pca_output p, bank b
+WHERE p.id <> '1000' AND p.id=b.id
+ORDER BY VECTOR_DISTANCE(embedding, (select embedding from pca_output
+                                     where id='1000'), COSINE)
+FETCH FIRST 3 ROWS ONLY;
+```
+We'll get:
+```
+ID    PDAYS  EURIBOR3M CONTACT    emp.var.rate DAY_OF_WEEK                                   
+-----------------------------------------------------------
+749   999    4.857     telephone  1.1          tue                                               
+1436  999    4.855     telephone  1.1          thu                                               
+956   999    4.856     telephone  1.1          wed                                               
+```
+As you can see the similarity search has retrieved quite similar records to the one provided.
 
 ## Optional cleaning
 If you want run more than one time the labs, remove the artifact created:
