@@ -61,9 +61,8 @@ EXIT;
 - Download from [here](https://archive.ics.uci.edu/dataset/222/bank+marketing) the dataset zip file. 
 - Unzip the file and look for `bank-additional-full.csv` in the directory `bank+marketing/bank-additional`. 
 - Copy that file in the Jupyter Notebook directory.
-- Create a `venv` on which run the notebook:
+- Create a `venv` in the directory you have the notebook:
 ```bash
-cd src/
 python3.11 -m venv .venv --copies
 source .venv/bin/activate
 pip3.11 install --upgrade pip wheel setuptools
